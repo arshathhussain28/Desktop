@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Orphan Tracker - Label Manager</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #f8fafc;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated Background Orbs */
+    .bg-orbs {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: float 10s infinite ease-in-out alternate;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: #3b82f6;
+      /* Blue */
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: #8b5cf6;
+      /* Violet */
+      bottom: -50px;
+      right: -50px;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #ec4899;
+      /* Pink */
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -2s;
+      opacity: 0.3;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      100% {
+        transform: translate(30px, 50px) scale(1.1);
+      }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      padding: 40px;
+      position: relative;
+      z-index: 1;
+      animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes slideUpFade {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 18px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+      position: relative;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      font-size: 16px;
+      color: #f8fafc;
+      transition: all 0.3s ease;
+    }
+
+    input::placeholder {
+      color: #475569;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 20px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background: rgba(15, 23, 42, 0.8);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+
+    select option {
+      background: #1e293b;
+      color: #f8fafc;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: all 0.5s ease;
+    }
+
+    .primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+
+    .primary:hover::before {
+      left: 100%;
+    }
+
+    .secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border-radius: 12px;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+      animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Notification Styles */
+    .toast-notification {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 500;
+      z-index: 9999;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast-success {
+      background: rgba(16, 185, 129, 0.8);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .toast-error {
+      background: rgba(239, 68, 68, 0.8);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+          </path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+      </div>
+      <h1>Orphan Tracker</h1>
+      <p class="subtitle">Zone wise orphan tracker tool</p>
+    </div>
+
+    <form id="labelForm">
+      <div class="form-group">
+        <label for="labelId">ASIN / Label ID</label>
+        <input id="labelId" type="text" placeholder="Enter ASIN or Label ID..." required>
+      </div>
+
+      <div class="form-group">
+        <label for="zone">Zone Designation</label>
+        <select id="zone" required>
+          <option value="" disabled selected>Select a designated zone...</option>
+          <option value="Zone 1">Zone 1</option>
+          <option value="Zone 2">Zone 2</option>
+          <option value="Zone 3">Zone 3</option>
+          <option value="Zone 4">Zone 4</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" class="primary" id="saveBtn">
+          <span class="btn-text">Save Label</span>
+          <span class="loading" style="display: none;"></span>
+        </button>
+        <button type="button" class="secondary" onclick="viewLabels()">View Tracked Labels</button>
+      </div>
+    </form>
+
+    <div id="result" class="result">
+      <span class="success-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto; display: block;">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </span>
+      <div id="resultText"></div>
+    </div>
+  </div>
+
+  <script>
+    let isSaving = false;
+
+    document.getElementById('labelForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (isSaving) return;
+
+      await addLabel();
+    });
+
+    async function addLabel() {
+      const labelId = document.getElementById("labelId").value.trim();
+      const zone = document.getElementById("zone").value;
+      const saveBtn = document.getElementById("saveBtn");
+      const btnText = saveBtn.querySelector('.btn-text');
+      const loading = saveBtn.querySelector('.loading');
+
+      if (!labelId || !zone) {
+        showNotification("Please fill all fields", "error");
+        return;
+      }
+
+      isSaving = true;
+      saveBtn.disabled = true;
+      btnText.style.opacity = '0';
+      loading.style.display = 'inline-block';
+
+      try {
+        const res = await fetch("http://localhost:5000/labels", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ labelId, zone })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById("resultText").innerText = `Label saved! ID: ${data.data.generatedId}`;
+          document.getElementById("result").style.display = "block";
+
+          // Reset form
+          document.getElementById("labelId").value = "";
+          document.getElementById("zone").selectedIndex = 0; // Reset to placeholder
+
+          // Show success toast
+          showNotification("Label tracked successfully!", "success");
+
+          // Scroll to result slightly delayed for animation smoothnes
+          setTimeout(() => {
+            document.getElementById("result").scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 100);
+        } else {
+          throw new Error(data.message || 'Failed to save');
+        }
+      } catch (error) {
+        showNotification("Failed to save label: " + error.message, "error");
+      } finally {
+        isSaving = false;
+        saveBtn.disabled = false;
+        btnText.style.opacity = '1';
+        loading.style.display = 'none';
+      }
+    }
+
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `toast-notification toast-${type}`;
+
+      // Add icon based on type
+      const iconSvg = type === 'success'
+        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`
+        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+
+      notification.innerHTML = `
+        ${iconSvg}
+        <span>${message}</span>
+      `;
+
+      document.body.appendChild(notification);
+
+      // Trigger animation
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 50);
+
+      // Remove after delay
+      setTimeout(() => {
+        notification.style.transform = 'translateX(120%)';
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 400); // Wait for transition to finish
+      }, 4000);
+    }
+
+    function viewLabels() {
+      // Add a slight delay for better UX feel before navigating
+      setTimeout(() => {
+        window.location.href = "labels.html";
+      }, 150);
+    }
+  </script>
+</body>
+
+</html>
