@@ -1,0 +1,14 @@
+{
+  "name": "dashboard-app-root",
+  "version": "1.0.0",
+  "description": "Root package for Dashboard App",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "install-all": "cd server && npm install"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

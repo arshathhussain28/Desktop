@@ -2,7 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const cron = require("node-cron");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, ".env") });
+
+const Label = require("./models/label");
 
 
 const app = express();
@@ -37,38 +40,22 @@ function generateOrphanId() {
 
 
 
-// ===== Schema =====
-const labelSchema = new mongoose.Schema({
-  labelId: {
-    type: String,
-    required: true
-  },
-  generatedId: {
-    type: String,
-    unique: true
-  },
-  zone: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+// Schema and Label model removed and moved to ./models/label.js
 
-
-const Label = mongoose.model("Label", labelSchema);
 
 
 
 // ===== Routes =====
 
+// Serve static files from the client directory
+app.use(express.static(path.join(__dirname, "..", "client")));
 
-// Test route
+// Explicitly serve index.html for the root path
 app.get("/", (req, res) => {
-  res.send("🚀 API + DB running");
+  res.sendFile(path.join(__dirname, "..", "client", "index.html"));
 });
+
+
 
 
 
@@ -151,7 +138,6 @@ cron.schedule("0 0 * * *", async () => {
 
 // ===== Server =====
 const PORT = process.env.PORT || 5000;
-
 
 app.listen(PORT, () => {
   console.log(`🌐 Server running on port ${PORT}`);

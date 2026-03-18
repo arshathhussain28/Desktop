@@ -1,14 +1,12 @@
 const mongoose = require("mongoose");
 
-
-const DataSchema = new mongoose.Schema({
+const labelSchema = new mongoose.Schema({
   labelId: {
     type: String,
     required: true
   },
   generatedId: {
-    type: String,
-    required: true
+    type: String
   },
   zone: {
     type: String,
@@ -20,5 +18,4 @@ const DataSchema = new mongoose.Schema({
   }
 });
 
-
-module.exports = mongoose.model("Data", DataSchema);
+module.exports = mongoose.model("Label", labelSchema);
