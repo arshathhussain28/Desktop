@@ -436,7 +436,7 @@
       loading.style.display = 'inline-block';
 
       try {
-        const res = await fetch("/labels", {
+        const res = await fetch("https://desktop-2fqt.onrender.com/labels", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ labelId, zone })
