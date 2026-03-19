@@ -736,7 +736,7 @@
     }
 
     async function loadLabels(attempt = 1) {
-      const maxAttempts = 3;
+      const maxAttempts = 4;
       try {
         const isWakingUp = attempt > 1;
         document.getElementById("labelTable").innerHTML = `
@@ -749,7 +749,7 @@
             </td>
           </tr>
         `;
-        const res = await fetchWithTimeout(API_URL, {}, 25000);
+        const res = await fetchWithTimeout(API_URL, {}, 55000);
         if (!res.ok) throw new Error(`API failed: ${res.status}`);
         allLabels = await res.json();
         updateStats(allLabels);
@@ -758,7 +758,7 @@
         console.error(`Attempt ${attempt} failed:`, error);
         if (attempt < maxAttempts) {
           // Wait 5s then retry — handles Render cold start
-          setTimeout(() => loadLabels(attempt + 1), 5000);
+          setTimeout(() => loadLabels(attempt + 1), 10000);
         } else {
           document.getElementById("labelTable").innerHTML = `
             <tr>
